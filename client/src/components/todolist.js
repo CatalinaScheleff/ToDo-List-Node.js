@@ -2,38 +2,61 @@
 
 // Import the useState and useEffect hooks from React
 import React, { useEffect, useState } from "react";
-import { getTasks, addTask } from "../api";
+import { getTasks, addTask, deleteTask } from "../api";
 
 const TodoList = () => {
   const [tasks, setTasks] = useState([]);
+  const [nextId, setNextId] = useState(1);
 
+  // Call the getTasks function to fetch tasks from the server
   useEffect(() => {
-    // Call the getTasks function to fetch tasks from the server
-    getTasks()
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const data = await getTasks();
+
         setTasks(data);
-        console.log(data);
-      })
-      .catch((error) => {
+        setNextId(
+          data.length > 0 ? Math.max(...data.map((task) => task.id)) + 1 : 1
+        );
+      } catch (error) {
         console.error(error);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const handleSubmit = () => {
-    const textInput = document.getElementById("newText").value;
+  const handleSubmit = async () => {
+    const textInput = document.getElementById("newText");
+    const textInputValue = textInput.value.trim();
+
+    if (!textInputValue) {
+      return;
+    }
 
     const newTask = {
-      id: tasks.length + 1,
-      text: textInput,
+      id: nextId,
+      text: textInputValue,
     };
+
     // Call the addTask function to add a new task to the server
-    addTask(newTask)
-      .then((addedTask) => {
-        setTasks([...tasks, addedTask]);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    await addTask(newTask);
+
+    try {
+      setTasks([...tasks, newTask]);
+      setNextId(nextId + 1);
+      textInput.value = "";
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = (taskId) => {
+    const filteredTasks = tasks.filter((task) => {
+      return task.id !== taskId;
+    });
+    deleteTask(taskId);
+    setTasks(filteredTasks);
   };
 
   return (
@@ -42,12 +65,16 @@ const TodoList = () => {
         <h1 className="mt-5">Add a Task</h1>
         <input type="text" id="newText" className="form-control my-4" />
         <button onClick={handleSubmit}>Add Task</button>
-        <h1 className="mt-5"> Your Tasks</h1>
+        <h1 className="mt-5"> Your Tasks ({tasks.length})</h1>
         <ul className="list-group">
-          {tasks.map((task) => (
-            <li key={task.id} className="list-group-item">
-              {task.text}
-            </li>
+          {tasks.map((task, index) => (
+            <div>
+              <h4>{index + 1}</h4>
+              <li key={task.id} className="list-group-item">
+                {task.text}
+                <button onClick={() => handleDelete(task.id)}>X</button>
+              </li>
+            </div>
           ))}
         </ul>
       </div>
@@ -56,3 +83,12 @@ const TodoList = () => {
 };
 
 export default TodoList;
+
+// const newTask = () => {
+//   if (textInput !== " ") {
+//     return {
+//       id: nextId,
+//       text: textInput,
+//     };
+//   }
+// };

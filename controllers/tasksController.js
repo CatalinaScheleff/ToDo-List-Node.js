@@ -8,7 +8,7 @@ let tasks = [
 
 // Functions  for routes
 
-// Function for route /task (GET)
+// Function for route /tasks (GET)
 const getTasks = (req, res) => {
   res.json(tasks);
 };
@@ -16,17 +16,19 @@ const getTasks = (req, res) => {
 // Function for route /tasks (POST)
 const addTask = (req, res) => {
   const newTask = req.body;
-  // {
-  //   id: tasks.length + 1,
-  //   text: req.body.text,
-  // };
   tasks.push(newTask);
   res.json(newTask);
+};
+
+const deleteTask = (req, res) => {
+  const taskIdToDelete = parseInt(req.params.id);
+  const filtered = tasks.filter((task) => task.id !== taskIdToDelete);
 };
 
 // Exporta las funciones del controlador
 module.exports = {
   getTasks,
   addTask,
+  deleteTask,
   // Agrega otras funciones según sea necesario
 };
