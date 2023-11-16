@@ -1,19 +1,14 @@
-// todo-list-node.js/controllers/taskController
+// todo-list-node.js/controllers/taskController.js
 
-//Task list
 let tasks = [
   { id: 1, text: "Tarea 1" },
   { id: 2, text: "Tarea 2" },
 ];
 
-// Functions  for routes
-
-// Function for route /tasks (GET)
 const getTasks = (req, res) => {
   res.json(tasks);
 };
 
-// Function for route /tasks (POST)
 const addTask = (req, res) => {
   const newTask = req.body;
   tasks.push(newTask);
@@ -22,18 +17,25 @@ const addTask = (req, res) => {
 
 const deleteTask = (req, res) => {
   const taskToDeleteId = parseInt(req.params.id);
-  tasks = tasks.filter((task) => task.id !== taskToDeleteId);
+  const filtered = tasks.filter((task) => task.id !== taskToDeleteId);
+  tasks = filtered;
+  res.json({ success: true });
 };
 
-// const updateTask = (req, res) => {
-//   const newText = req.params.text
-// };
+const updateTask = (req, res) => {
+  const taskToUpdateId = parseInt(req.params.id);
+  const updatedText = req.body.text;
 
-// Exporta las funciones del controlador
+  tasks = tasks.map((task) =>
+    task.id === taskToUpdateId ? { ...task, text: updatedText } : task
+  );
+
+  res.json({ success: true });
+};
+
 module.exports = {
   getTasks,
   addTask,
   deleteTask,
-  // updateTask,
-  // Agrega otras funciones según sea necesario
+  updateTask,
 };

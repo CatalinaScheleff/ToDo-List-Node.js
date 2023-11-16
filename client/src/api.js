@@ -41,3 +41,17 @@ export const deleteTask = (taskId) => {
       console.error(error);
     });
 };
+
+export const updateTask = (taskId, updatedTask) => {
+  return fetch(apiUrl + "/" + taskId, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedTask),
+  })
+    .then((response) => response.json())
+    .catch((error) => {
+      console.error(error);
+    });
+};
