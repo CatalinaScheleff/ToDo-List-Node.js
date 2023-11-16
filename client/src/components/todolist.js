@@ -59,6 +59,10 @@ const TodoList = () => {
     setTasks(filteredTasks);
   };
 
+  // const handleEdit = (taskId) => {
+
+  // }
+
   return (
     <div className="justify-content-center d-flex">
       <div className="col-6">
@@ -73,6 +77,7 @@ const TodoList = () => {
               <li key={task.id} className="list-group-item">
                 {task.text}
                 <button onClick={() => handleDelete(task.id)}>X</button>
+                {/* <button onClick={() => handleEdit(task.id)}>Edit</button> */}
               </li>
             </div>
           ))}

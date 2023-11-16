@@ -21,14 +21,19 @@ const addTask = (req, res) => {
 };
 
 const deleteTask = (req, res) => {
-  const taskIdToDelete = parseInt(req.params.id);
-  const filtered = tasks.filter((task) => task.id !== taskIdToDelete);
+  const taskToDeleteId = parseInt(req.params.id);
+  tasks = tasks.filter((task) => task.id !== taskToDeleteId);
 };
+
+// const updateTask = (req, res) => {
+//   const newText = req.params.text
+// };
 
 // Exporta las funciones del controlador
 module.exports = {
   getTasks,
   addTask,
   deleteTask,
+  // updateTask,
   // Agrega otras funciones según sea necesario
 };
