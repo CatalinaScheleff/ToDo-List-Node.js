@@ -1,8 +1,8 @@
 // todo-list-node.js/controllers/taskController.js
 
 let tasks = [
-  { id: 1, text: "Tarea 1" },
-  { id: 2, text: "Tarea 2" },
+  { id: 1, text: "Task 1" },
+  { id: 2, text: "Task 2" },
 ];
 
 const getTasks = (req, res) => {
